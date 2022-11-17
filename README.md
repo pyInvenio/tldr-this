@@ -1,0 +1,2 @@
+# whatshere
+Cohere Thanksgiving Hackathon
