@@ -11,7 +11,7 @@ with open(filepath) as f:
 print(len(data))
 f = open("train.txt", "w", encoding="utf-8")
 f.write("This program takes in a Code segment and coding Language and outputs the Code Tokens and Docstring for the code:\n\n")
-for d in data[:400]:
+for d in data[401:500]:
     f.write("Code:" + d['code'].replace('\n', '\\n') + "\n")
     f.write("Language: " + d['language'] + "\n")
     f.write("Code Tokens: " + str(d['code_tokens']) + "\n")
