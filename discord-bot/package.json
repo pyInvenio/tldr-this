@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@devraelfreeze/discordjs-pagination": "^2.6.4",
+    "chrono-node": "^2.4.2",
     "cohere-ai": "^4.4.0",
     "discord.js": "^14.6.0",
     "discord.js-pagination": "^1.0.3",

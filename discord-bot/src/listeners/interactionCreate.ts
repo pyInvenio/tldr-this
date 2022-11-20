@@ -19,8 +19,6 @@ const handleSlashCommand = async (
     return;
   }
 
-  if 
-  await interaction.deferReply();
-
+  await interaction.deferReply(); // note: initial defer prevents followUp from being ephemeral, DiscordJS limitation
   slashCommand.run(client, interaction);
 };
