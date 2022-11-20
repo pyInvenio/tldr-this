@@ -49,7 +49,7 @@ async def add(int: discord.Interaction, x: int, y: int):
 async def summarize(int: discord.Interaction, length: int):
     sum = ''
     async for message in int.channel.history(limit=min(length,200)):
-        sum += message.content
+        sum += message.author + message.content
     await int.response.send_message(sum)
 
 @tree.command(name="images", description="See thumbnails of images (test function)", guild=discord.Object(id=config.SERVER_ID))
