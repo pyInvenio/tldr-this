@@ -1,6 +1,6 @@
 const Constants = {
     Summarizer: {
-        USER_PREFIX_TOKEN: "#CHON1120101AM"
+        USER_PREFIX_TOKEN: "USER"
 
     }
 }

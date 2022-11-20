@@ -6,11 +6,18 @@ export const Hello: Command = {
   description: 'Returns a greeting',
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {
-    const content = `Hello ${interaction.user}!`;
+    const resp = "Hello " + interaction.user + "!";
 
     await interaction.followUp({
-      ephemeral: true,
-      content,
+      content: resp,
+      ephemeral: true
     });
+    
+    // const content = `Hello ${interaction.user}!`;
+
+    // await interaction.followUp({
+    //   ephemeral: true,
+    //   content,
+    // });
   },
 };

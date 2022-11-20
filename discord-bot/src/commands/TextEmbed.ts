@@ -53,7 +53,12 @@ export const TextEmbed: Command = {
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {
     var pages = []
-    
+    // const splitsize = 5;
+    // var splitSums = {}
+    // const end = Object.entries(mes)
+    // while (splitsize+5<Object.keys(messageDict.Summaries).length){
+    //   const splitArr = 
+    // }
     for (const [key, value] of Object.entries(messageDict['Summaries'])) {
       const exampleEmbed = new EmbedBuilder()
       .setColor(0x0099ff)
