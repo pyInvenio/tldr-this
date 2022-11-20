@@ -4,14 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/Bot.ts"
+    "start": "nodemon src/Bot.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@devraelfreeze/discordjs-pagination": "^2.6.4",
+    "cohere-ai": "^4.4.0",
     "discord.js": "^14.6.0",
-    "dotenv": "^16.0.3"
+    "discord.js-pagination": "^1.0.3",
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.20",
+    "pagination.djs": "^4.0.9"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
