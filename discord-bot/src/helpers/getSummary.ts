@@ -5,7 +5,8 @@ import { SummarizeResult } from 'src/interfaces/Summarize';
 
 export default async (
   messages: Message[],
-  bot_message: Message
+  bot_message: Message,
+  chunk_size: number
 ): Promise<SummarizeResult[]> => {
   cohere.init(process.env.COHERE_API || '');
 
@@ -15,7 +16,7 @@ export default async (
 
   let curr = 0;
   let to_summarize = Math.min(
-    Constants.Summarizer.MAX_MESSAGE_COUNT,
+    chunk_size,
     messages.length
   );
 
@@ -119,7 +120,7 @@ export default async (
 
     to_summarize = Math.min(
       messages.length - curr,
-      Constants.Summarizer.MAX_MESSAGE_COUNT
+      chunk_size
     );
   }
 

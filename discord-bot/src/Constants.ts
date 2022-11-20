@@ -1,7 +1,6 @@
 const Constants = {
     Summarizer: {
-        USER_PREFIX_TOKEN: "User",
-        MAX_MESSAGE_COUNT: 30
+        USER_PREFIX_TOKEN: "Person",
     }
 }
 

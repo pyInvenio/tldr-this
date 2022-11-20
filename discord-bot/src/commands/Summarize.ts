@@ -42,6 +42,14 @@ export const Summarize: Command = {
       ],
       required: false,
     },
+    {
+      name: 'chunk_size',
+      description: 'Summary chunk size',
+      type: ApplicationCommandOptionType.Integer,
+      required: false,
+      min_value: 5,
+      max_value: 40
+    }
   ],
   run: async (client: Client, interaction: CommandInteraction) => {
     // global.someAttributeName:Boolean = true;
@@ -56,12 +64,21 @@ export const Summarize: Command = {
     }
     in_use = true;
 
-    const date = chrono.parse(interaction.options.get('from')?.value as string);
-    const dateFrom = date.length ? new Date(date[0].start.date()) : null;
+    let fromExists = false;
+    if (interaction.options.get('from') !== null) fromExists = true;
 
+    const dateFrom = fromExists
+      ? new Date(
+          chrono
+            .parse(interaction.options.get('from')?.value as string)[0]
+            .start.date()
+        )
+      : null;
+  
     const format = (interaction.options.get('format')?.value as number) || 0;
 
-    const length = (interaction.options.get('length')?.value as number) || 30;
+    const length =
+      (interaction.options.get('length')?.value as number) || (fromExists ? Infinity : 30);
     const collected_messages: Message[] = [];
 
     if (!interaction.channel) {
@@ -74,7 +91,9 @@ export const Summarize: Command = {
 
     const bot_message = await interaction.followUp({
       ephemeral: true,
-      content: `Gathering ${length} messages...`,
+      content: fromExists
+        ? `Gathering messages from ${dateFrom}`
+        : `Gathering ${length} messages...`,
     });
 
     // Create message pointer
@@ -85,20 +104,26 @@ export const Summarize: Command = {
       );
 
     let left_to_fetch = length;
+
     while (message) {
       await interaction.channel.messages
         .fetch({ limit: Math.min(100, left_to_fetch), before: message.id })
         .then((messagePage) => {
           messagePage.forEach((msg) => {
+            // dates read in backwards
+            if (!message) return;
             const msgDate = new Date(msg.createdTimestamp); // msg.createdTimestamp in ms
 
-            if (
-              !(dateFrom && msgDate < dateFrom) &&
-              msg.author.id !== process.env.CLIENT_ID
-            )
+            if (dateFrom != null && msgDate <= dateFrom) {
+              message = null;
+              return;
+            }
+
+            if (msg.author.id !== process.env.CLIENT_ID)
               collected_messages.push(msg);
             else left_to_fetch++;
           });
+          if (!message) return;
 
           // Update our message pointer to be last message in page of messages
           left_to_fetch -= 100;
@@ -109,11 +134,14 @@ export const Summarize: Command = {
         });
     }
 
-    bot_message.edit(`Summarizing ${length} messages...`);
+    bot_message.edit(`Summarizing ${collected_messages.length} messages...`);
+
+    const chunk_size = interaction.options.get('chunk_size')?.value as number || 30;
 
     const summaries = await getSummary(
       collected_messages.reverse(),
-      bot_message
+      bot_message,
+      chunk_size
     );
 
     bot_message.edit('**Summary**');
@@ -126,7 +154,7 @@ export const Summarize: Command = {
         const max = 2000;
         let summary = '';
         summaries.forEach((s) => {
-          let entry = `*${s.start} - ${s.end}*\n>${s.content}\n\n`;
+          let entry = `*${s.start} - ${s.end}*\n> ${s.content}\n\n`;
           if (summary.length + entry.length > max) {
             bot_message.channel.send(summary);
             summary = '';
